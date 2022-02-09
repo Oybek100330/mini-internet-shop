@@ -1,0 +1,7 @@
+data model
+    Categories (category_id, category_name)
+    Users (user_id, username, password, contact, email, role)
+    Products (product_id, name, price, short_desc, long_desc, picture, category_id)
+    Orders (order_id, user_id, isPaid)
+    Order_products (order_id, product_id, count)
+
