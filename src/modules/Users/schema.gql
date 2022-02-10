@@ -4,25 +4,38 @@ input Pagination {
 }
 
 type Query {
-    categories(
-        category_id: ID
+    users(
+        user_id: ID
         search: String
         pagination: Pagination = {}
-    ): [Category!]!
+    ): [User!]!
 }
 
-type Category {
-    category_id: ID!
-    category_name: String!
+type User {
+    user_id: ID!
+    username: String!
+    contact: String!
+    email: String!
+    role: String!
 }
 
 type Mutation {
-    addCategories( category_name: String! ): Response!
-    updateCategories( category_id: Int! category_name: String! ): Response!
+    addUser(username: String! 
+            password: String! 
+            contact: String! 
+            email: String! 
+            role: String! ): Response!
+
+    updateUser(user_id: Int! 
+               username: String
+               password: String
+               contact: String
+               email: String
+               role: String ): Response!
 }
 
 type Response {
     status: Int!
     message: String!
-    data: Category
+    user: User
 }

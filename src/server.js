@@ -2,12 +2,17 @@ import {
     ApolloServerPluginLandingPageGraphQLPlayground, 
     ApolloServerPluginDrainHttpServer,
   } from 'apollo-server-core'
+  import { makeExecutableSchema } from '@graphql-tools/schema'
   import { ApolloServer } from 'apollo-server-express'
   import express from 'express'
   import http from 'http'
   import '../config.js'
   
   import module from './modules/index.js'
+  const schema = makeExecutableSchema({
+    typeDefs: module.typeDefs,
+    resolvers: module.resolvers,
+  })
   
   async function startApolloServer() {
   
@@ -16,8 +21,7 @@ import {
   
       const server = new ApolloServer({
           introspection: true,
-          typeDefs: module.typeDefs,
-          resolvers: module.resolvers,
+          schema: schema,
           plugins: [
               ApolloServerPluginLandingPageGraphQLPlayground(),
               ApolloServerPluginDrainHttpServer({ httpServer })

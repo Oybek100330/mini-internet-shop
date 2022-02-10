@@ -2,19 +2,19 @@ import model from './model.js'
 
 export default {
     Query: {
-        categories: async (_, args) => {
-            return await model.categories(args)
+        users: async (_, args) => {
+            return await model.users(args)
         }
     },
 
     Mutation: {
-        addCategories: async (_, args) => {
+        addUser: async (_, args) => {
             try {
-                const [ category ] = await model.addCategories(args)
+                const [ user ] = await model.addUser(args)
                 return {
 					status: 200,
-					message: "The category has been succesfully added",
-					data: category
+					message: "The user has been succesfully added",
+					user: user
 				}
             } catch(error) {
 				return {
@@ -25,16 +25,16 @@ export default {
 			}
         },
         
-        updateCategories: async (_, args) => {
+        updateUser: async (_, args) => {
             try {
-                const [ category ] = await model.updateCategories(args)
-                if(category){
+                const [ user ] = await model.updateUser(args)
+                if(user){
                     return {
                         status: 200,
-                        message: "The category has been succesfully updated",
-                        data: category
+                        message: "The user has been succesfully updated",
+                        user: user
                     }
-                } else throw new Error("There is no such category!")
+                } else throw new Error("There is no such user!")
             } catch(error) {
 				return {
 					status: 400,

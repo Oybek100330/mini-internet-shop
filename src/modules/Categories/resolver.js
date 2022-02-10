@@ -14,7 +14,7 @@ export default {
                 return {
 					status: 200,
 					message: "The category has been succesfully added",
-					data: category
+					category: category
 				}
             } catch(error) {
 				return {

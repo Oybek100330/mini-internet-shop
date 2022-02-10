@@ -4,13 +4,21 @@ const PRODUCTS = `
     SELECT * FROM Products
     WHERE
     CASE
-        WHEN $1 > 0 THEN category_id = $1
+        WHEN $1 > 0 THEN product_id = $1
         ELSE TRUE
     END AND
     CASE
-    WHEN LENGTH($2) > 0 THEN (
-        category_name ILIKE CONCAT('%', $2, '%')
-    ) ELSE TRUE
+        WHEN LENGTH($2) > 0 THEN (
+            product_name ILIKE CONCAT('%', $2, '%')
+        ) ELSE TRUE
+    END AND
+    CASE
+        WHEN $3 > 0 THEN price = $3  
+        ELSE TRUE
+    END AND
+    CASE
+        WHEN $4 > 0 THEN category_id = $4
+        ELSE TRUE
     END 
     offset $3 limit $4
 `
