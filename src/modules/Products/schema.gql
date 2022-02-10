@@ -1,28 +1,51 @@
 input Pagination {
 	page: Int = 1
-	limit: Int = 3
+	limit: Int = 2
 }
+
+scalar Upload
 
 type Query {
-    categories(
-        category_id: ID
+    products(
+        product_id: ID
         search: String
+        price: Int
+        category_id: ID
         pagination: Pagination = {}
-    ): [Category!]!
+    ): [Product!]!
 }
 
-type Category {
+type Product {
+    product_id: ID!
+    name: String!
+    price: Int!
+    short_desc: String!
+    long_desc: String!
+    picture: String!
     category_id: ID!
-    category_name: String!
 }
 
 type Mutation {
-    addCategories( category_name: String! ): Response!
-    updateCategories( category_id: Int! category_name: String! ): Response!
+    addProduct( name: String! 
+                price: String! 
+                short_desc: String! 
+                long_desc: String! 
+                picture: Upload!
+                category_id: ID!): Response!
+
+    updateProduct( product_id: Int! 
+                name: String
+                price: Int
+                short_desc: String
+                long_desc: String
+                category_id: ID
+                 ): Response!
+
+    deleteProduct(product_id: Int! ): Response!
 }
 
 type Response {
     status: Int!
     message: String!
-    data: Category
+    product: Product
 }

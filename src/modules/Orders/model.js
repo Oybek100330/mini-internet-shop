@@ -1,48 +1,65 @@
 import fetch from '../../utils/postgres.js'
 
-const CATEGORIES = `
-    SELECT * FROM Categories
+const ORDERS = `
+    SELECT * FROM Orders
     WHERE
     CASE
-        WHEN $1 > 0 THEN category_id = $1
+        WHEN $1 > 0 THEN order_id = $1
         ELSE TRUE
     END AND
     CASE
-    WHEN LENGTH($2) > 0 THEN (
-        category_name ILIKE CONCAT('%', $2, '%')
-    ) ELSE TRUE
-    END 
-    offset $3 limit $4
+        WHEN $2 > 0 THEN user_id = $2
+        ELSE TRUE
+    END AND
+    CASE
+        WHEN $3 in (true, false) THEN isPaid = $3 
+        ELSE TRUE
+    END
+    offset $4 limit $5
 `
 
-const ADD_CATEGORIES = `
-    INSERT INTO Categories ( category_name ) VALUES ($1)
+const ADD_ORDER = `
+    INSERT INTO Orders ( user_id, isPaid ) VALUES 
+    ($1, $2)
     RETURNING *
 `
 
-const UPDATE_CATEGORIES = `
-    UPDATE Categories c SET 
-        category_name = (
-            CASE WHEN LENGTH($2) > 0 THEN $2 ELSE c.category_name END
+const UPDATE_ORDER = `
+    UPDATE orders o SET
+        isPaid = (
+            CASE WHEN $2 in (true, false) THEN $2 ELSE o.isPaid END
+        ),
+        user_id = (
+            CASE WHEN $3 > 0 THEN $3 ELSE o.user_id END
         )
-    WHERE category_id = $1
+    WHERE order_id = $1
     RETURNING *
 `
 
-function categories ({ category_id, search, pagination: {page, limit} }) {
-    return fetch(CATEGORIES, category_id, search, (page - 1) * limit, limit)
+const DELETE_ORDER = `
+    DELETE FROM Orders WHERE order_id = $1 
+    RETURNING * 
+`
+
+function orders ({ order_id, user_id, isPaid, pagination: {page, limit} }) {
+    return fetch(ORDERS, order_id, user_id, isPaid, (page - 1) * limit, limit)
 }
 
-function addCategories ({ category_name }) {
-    return fetch(ADD_CATEGORIES, category_name)
+function addOrder ({ user_id, isPaid }) {
+    return fetch(ADD_ORDER, user_id, isPaid)
 }
 
-function updateCategories ({ category_id, category_name }) {
-    return fetch(UPDATE_CATEGORIES, category_id, category_name)
+function updateOrder ({ order_id, isPaid, user_id }) {
+    return fetch(UPDATE_ORDER, order_id, isPaid, user_id)
+}
+
+function deleteOrder ({ order_id }) {
+    return fetch(DELETE_ORDER, order_id)
 }
 
 export default {
-    categories,
-    addCategories,
-    updateCategories
+    orders,
+    addOrder,
+    updateOrder,
+    deleteOrder
 }

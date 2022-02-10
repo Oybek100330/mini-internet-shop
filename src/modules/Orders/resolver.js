@@ -2,19 +2,19 @@ import model from './model.js'
 
 export default {
     Query: {
-        categories: async (_, args) => {
-            return await model.categories(args)
+        orders: async (_, args) => {
+            return await model.orders(args)
         }
     },
 
     Mutation: {
-        addCategories: async (_, args) => {
+        addOrder: async (_, args) => {
             try {
-                const [ category ] = await model.addCategories(args)
+                const [ order ] = await model.addOrder(args)
                 return {
 					status: 200,
-					message: "The category has been succesfully added",
-					data: category
+					message: "The order has been succesfully added",
+					order: order
 				}
             } catch(error) {
 				return {
@@ -25,16 +25,35 @@ export default {
 			}
         },
         
-        updateCategories: async (_, args) => {
+        updateOrder: async (_, args) => {
             try {
-                const [ category ] = await model.updateCategories(args)
-                if(category){
+                const [ order ] = await model.updateOrder(args)
+                if(order){
                     return {
                         status: 200,
-                        message: "The category has been succesfully updated",
-                        data: category
+                        message: "The order has been succesfully updated",
+                        order: order
                     }
-                } else throw new Error("There is no such category!")
+                } else throw new Error("There is no such order!")
+            } catch(error) {
+				return {
+					status: 400,
+					message: error.message,
+					data: null
+				}
+			}
+        }, 
+
+        deleteOrder: async (_, args) => {
+            try {
+                const [ order ] = await model.deleteOrder(args)
+                if(order){
+                    return {
+                        status: 200,
+                        message: "The order has been succesfully deleted",
+                        order: order
+                    }
+                } else throw new Error("There is no such order!")
             } catch(error) {
 				return {
 					status: 400,

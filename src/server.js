@@ -6,9 +6,11 @@ import {
   import { ApolloServer } from 'apollo-server-express'
   import express from 'express'
   import http from 'http'
+  import context from './context.js'
   import '../config.js'
   
   import module from './modules/index.js'
+import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload'
   const schema = makeExecutableSchema({
     typeDefs: module.typeDefs,
     resolvers: module.resolvers,
@@ -17,10 +19,12 @@ import {
   async function startApolloServer() {
   
       const app = express()
+      app.use(graphqlUploadExpress())
       const httpServer = http.createServer(app)
   
       const server = new ApolloServer({
           introspection: true,
+          context,
           schema: schema,
           plugins: [
               ApolloServerPluginLandingPageGraphQLPlayground(),

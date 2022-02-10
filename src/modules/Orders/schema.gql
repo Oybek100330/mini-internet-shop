@@ -1,28 +1,32 @@
 input Pagination {
 	page: Int = 1
-	limit: Int = 2
+	limit: Int = 10
 }
 
 type Query {
-    categories(
-        category_id: ID
-        search: String
+    orders(
+        order_id: ID
+        user_id: ID
+        isPaid: Boolean
+        order_created_at: String
         pagination: Pagination = {}
-    ): [Category!]!
+    ): [Order!]!
 }
 
-type Category {
-    category_id: ID!
-    category_name: String!
+type Order {
+    order_id: ID!
+    user_id: ID!
+    isPaid: Boolean
 }
 
 type Mutation {
-    addCategories( category_name: String! ): Response!
-    updateCategories( category_id: Int! category_name: String! ): Response!
+    addOrder(user_id: ID! isPaid: Boolean!): Response!
+    updateOrder(order_id: Int! isPaid: Boolean user_id: Int ): Response!
+    deleteOrder(order_id: Int! ): Response!
 }
 
 type Response {
     status: Int!
     message: String!
-    data: Category
+    order: Order
 }

@@ -1,20 +1,36 @@
 import model from './model.js'
+import { finished } from 'stream/promises'
+import { GraphQLUpload } from 'graphql-upload'
+import path from 'path'
+import fs from 'fs'
 
 export default {
     Query: {
-        categories: async (_, args) => {
-            return await model.categories(args)
+        products: async (_, args) => {
+            return await model.products(args)
         }
     },
 
     Mutation: {
-        addCategories: async (_, args) => {
+        addProduct: async (_, args) => {
             try {
-                const [ category ] = await model.addCategories(args)
+                const { picture } = args 
+                const { createReadStream, filename, mimetype, encoding } = await picture
+                const stream = createReadStream()
+                const fileAddress = path.join(process.cwd(), 'images', filename)
+                const imgUrl = 'images'+ filename
+                const out = fs.createWriteStream(fileAddress)
+                stream.pipe(out)
+                await finished(out)
+                const [ Product ] = await model.addProduct(args)
+                Product.picture = imgUrl
+                
+		
+      		    // return fileAddress
                 return {
 					status: 200,
-					message: "The category has been succesfully added",
-					data: category
+					message: "The product has been succesfully added",
+					product: Product
 				}
             } catch(error) {
 				return {
@@ -25,16 +41,35 @@ export default {
 			}
         },
         
-        updateCategories: async (_, args) => {
+        updateProduct: async (_, args) => {
             try {
-                const [ category ] = await model.updateCategories(args)
-                if(category){
+                const [ product ] = await model.updateProduct(args)
+                if(product){
                     return {
                         status: 200,
-                        message: "The category has been succesfully updated",
-                        data: category
+                        message: "The product has been succesfully updated",
+                        product: product
                     }
-                } else throw new Error("There is no such category!")
+                } else throw new Error("There is no such product!")
+            } catch(error) {
+				return {
+					status: 400,
+					message: error.message,
+					data: null
+				}
+			}
+        },
+
+        deleteProduct: async (_, args) => {
+            try {
+                const [ product ] = await model.deleteProduct(args)
+                if(product){
+                    return {
+                        status: 200,
+                        message: "The product has been succesfully deleted",
+                        product: product
+                    }
+                } else throw new Error("There is no such product!")
             } catch(error) {
 				return {
 					status: 400,
@@ -43,5 +78,7 @@ export default {
 				}
 			}
         }
-    }
+    },
+
+    Upload: GraphQLUpload
 }

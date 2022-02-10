@@ -4,25 +4,29 @@ input Pagination {
 }
 
 type Query {
-    categories(
-        category_id: ID
-        search: String
+    orderProducts(
+        order_id: ID
+        product_id: ID
         pagination: Pagination = {}
-    ): [Category!]!
+    ): [OrderProduct!]!
 }
 
-type Category {
-    category_id: ID!
-    category_name: String!
+type OrderProduct {
+    order_id: ID!
+    product_id: ID!
+    count: Int!
 }
 
 type Mutation {
-    addCategories( category_name: String! ): Response!
-    updateCategories( category_id: Int! category_name: String! ): Response!
+    addOrderProducts( order_id: ID! product_id: ID! count: Int): Response!
+
+    updateOrderProducts( order_id: ID! product_id: ID! count: Int ): Response!
+    
+    deleteOrderProducts(order_id: ID! product_id: ID! ): Response!
 }
 
 type Response {
     status: Int!
     message: String!
-    data: Category
+    orderProduct: OrderProduct
 }

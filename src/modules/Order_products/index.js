@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 import path from 'path'
 
 import resolvers from './resolver.js'
-const typeDefs = readFileSync(path.join( process.cwd(), 'src', 'modules', 'Categories', 'schema.gql' ))
+const typeDefs = readFileSync(path.join( process.cwd(), 'src', 'modules', 'Order_products', 'schema.gql' ))
 
 export default {
 	resolvers,

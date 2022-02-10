@@ -2,19 +2,19 @@ import model from './model.js'
 
 export default {
     Query: {
-        categories: async (_, args) => {
-            return await model.categories(args)
+        orderProducts: async (_, args) => {
+            return await model.orderProducts(args)
         }
     },
 
     Mutation: {
-        addCategories: async (_, args) => {
+        addOrderProducts: async (_, args) => {
             try {
-                const [ category ] = await model.addCategories(args)
+                const [ orderProduct ] = await model.addOrderProducts(args)
                 return {
 					status: 200,
-					message: "The category has been succesfully added",
-					data: category
+					message: "The orderProduct has been succesfully added",
+					orderProduct: orderProduct
 				}
             } catch(error) {
 				return {
@@ -25,16 +25,35 @@ export default {
 			}
         },
         
-        updateCategories: async (_, args) => {
+        updateOrderProducts: async (_, args) => {
             try {
-                const [ category ] = await model.updateCategories(args)
-                if(category){
+                const [ orderProduct ] = await model.updateOrderProducts(args)
+                if(orderProduct){
                     return {
                         status: 200,
-                        message: "The category has been succesfully updated",
-                        data: category
+                        message: "The orderProduct has been succesfully updated",
+                        orderProduct: orderProduct
                     }
-                } else throw new Error("There is no such category!")
+                } else throw new Error("There is no such orderProduct!")
+            } catch(error) {
+				return {
+					status: 400,
+					message: error.message,
+					data: null
+				}
+			}
+        },
+
+        deleteOrderProducts: async (_, args) => {
+            try {
+                const [ orderProduct ] = await model.deleteOrderProducts(args)
+                if(orderProduct){
+                    return {
+                        status: 200,
+                        message: "The product has been succesfully deleted",
+                        orderProduct: orderProduct
+                    }
+                } else throw new Error("There is no such orderProduct!")
             } catch(error) {
 				return {
 					status: 400,

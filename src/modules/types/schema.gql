@@ -1,0 +1,14 @@
+scalar Age
+scalar Email
+scalar Contact
+scalar Upload
+
+enum Gender {
+	male
+	female
+}
+
+type Response {
+	status: Int!
+	message: String!
+}
