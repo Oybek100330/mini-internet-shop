@@ -3,6 +3,7 @@ import { finished } from 'stream/promises'
 import { GraphQLUpload } from 'graphql-upload'
 import path from 'path'
 import fs from 'fs'
+import tokenFunction from '../../utils/jwt.js'
 
 export default {
 
@@ -17,6 +18,20 @@ export default {
     Mutation: {
         addProduct: async (_, { product_name, price, short_desc, long_desc, file, category_id }) => {
             try {
+                const { token } = req.headers
+
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, agent } = tokenFunction.verify(token)
+            
+		        if(!(req.headers['user-agent'] == agent)) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+
                 const { createReadStream, filename, mimetype, encoding } = await file
                 if(['image/jpeg', 'image/jpg', 'image/png'].indexOf(mimetype) == -1 ) {
                     throw new Error("Filetype must be 'jpeg', 'jpg' or 'png'")
@@ -49,6 +64,20 @@ export default {
         
         updateProduct: async (_, args) => {
             try {
+                const { token } = req.headers
+
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, agent } = tokenFunction.verify(token)
+            
+		        if(!(req.headers['user-agent'] == agent)) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+
                 const [ product ] = await model.updateProduct(args)
                 if(product){
                     return {
@@ -68,6 +97,20 @@ export default {
 
         deleteProduct: async (_, args) => {
             try {
+                const { token } = req.headers
+
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, agent } = tokenFunction.verify(token)
+            
+		        if(!(req.headers['user-agent'] == agent)) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+
                 const [ product ] = await model.deleteProduct(args)
                 if(product){
                     return {

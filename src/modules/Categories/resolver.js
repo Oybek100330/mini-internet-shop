@@ -1,4 +1,5 @@
 import model from './model.js'
+import tokenFunction from '../../utils/jwt.js'
 
 export default {
     Query: {
@@ -10,6 +11,19 @@ export default {
     Mutation: {
         addCategories: async (_, args) => {
             try {
+                const { token } = req.headers
+
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, agent } = tokenFunction.verify(token)
+            
+		        if(!(req.headers['user-agent'] == agent)) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                if(userId != 1) throw new Error("Sorry you are not admin!!!")
                 const [ category ] = await model.addCategories(args)
                 return {
 					status: 200,
@@ -27,6 +41,20 @@ export default {
         
         updateCategories: async (_, args) => {
             try {
+                const { token } = req.headers
+
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, agent } = tokenFunction.verify(token)
+            
+		        if(!(req.headers['user-agent'] == agent)) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+
                 const [ category ] = await model.updateCategories(args)
                 if(category){
                     return {
@@ -46,6 +74,20 @@ export default {
 
         deleteCategories: async (_, args) => {
             try {
+                const { token } = req.headers
+
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, agent } = tokenFunction.verify(token)
+            
+		        if(!(req.headers['user-agent'] == agent)) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+
                 const [ category ] = await model.deleteCategories(args)
                 if(category){
                     return {

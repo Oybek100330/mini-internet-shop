@@ -5,3 +5,10 @@ data model
     Orders (order_id, user_id, isPaid)
     Order_products (order_id, product_id, count)
 
+PG_HOST=john.db.elephantsql.com
+PG_USER=igffzkft
+PG_PASSWORD=eDhspI516GLWIVq23C7nUwqYuqK7vFns
+PG_DATABASE=igffzkft
+
+TOKEN_KEY=LKJHGFDSA654MNBVCXZ
+

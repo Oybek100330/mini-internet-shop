@@ -1,4 +1,5 @@
 import model from './model.js'
+import tokenFunction from '../../utils/jwt.js'
 
 export default {
     Query: {

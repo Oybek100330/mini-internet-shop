@@ -1,4 +1,5 @@
 import model from './model.js'
+import tokenFunction from '../../utils/jwt.js'
 
 export default {
     Query: {
@@ -13,7 +14,8 @@ export default {
                 const [ user ] = await model.addUser(args)
                 return {
 					status: 200,
-					message: "The new user has been succesfully registered",
+					// message: "The new user has been succesfully registered",
+                    token: tokenFunction.sign({ userId: user.user_id}),
 					user: user
 				}
             } catch(error) {
@@ -32,6 +34,7 @@ export default {
                     return {
                         status: 200,
                         message: "The new user has been succesfully logged in",
+                        token: tokenFunction.sign({ userId: user.user_id }),
                         user: user
                     }
                 } else throw new Error("Wrong username or password!")
