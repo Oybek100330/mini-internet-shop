@@ -5,6 +5,9 @@ import path from 'path'
 import fs from 'fs'
 
 export default {
+
+    Upload: GraphQLUpload,
+
     Query: {
         products: async (_, args) => {
             return await model.products(args)
@@ -12,21 +15,24 @@ export default {
     },
 
     Mutation: {
-        addProduct: async (_, args) => {
+        addProduct: async (_, { product_name, price, short_desc, long_desc, file, category_id }) => {
             try {
-                const { picture } = args 
-                const { createReadStream, filename, mimetype, encoding } = await picture
+                const { createReadStream, filename, mimetype, encoding } = await file
+                if(['image/jpeg', 'image/jpg', 'image/png'].indexOf(mimetype) == -1 ) {
+                    throw new Error("Filetype must be 'jpeg', 'jpg' or 'png'")
+                }
+                file = await file
+                const [ Product ] = await model.addProduct({ product_name, price, short_desc, long_desc, file, category_id })
+                console.log(file);
                 const stream = createReadStream()
                 const fileAddress = path.join(process.cwd(), 'images', filename)
-                const imgUrl = 'images'+ filename
+                const imgUrl = '/images/'+ filename
                 const out = fs.createWriteStream(fileAddress)
                 stream.pipe(out)
                 await finished(out)
-                const [ Product ] = await model.addProduct(args)
-                Product.picture = imgUrl
-                
-		
-      		    // return fileAddress
+                Product.imgUrl = imgUrl
+                console.log(Product)
+
                 return {
 					status: 200,
 					message: "The product has been succesfully added",
@@ -80,5 +86,9 @@ export default {
         }
     },
 
-    Upload: GraphQLUpload
+    // File: {
+    //     filename: parent => console.log(parent.filename),
+    //     mimetype: parent => console.log(parent.mimetype),
+    //     encoding: parent => console.log(parent.encoding),
+    // }
 }

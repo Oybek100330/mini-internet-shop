@@ -4,6 +4,8 @@ input Pagination {
 }
 
 scalar Upload
+scalar File
+scalar Any
 
 type Query {
     products(
@@ -17,24 +19,21 @@ type Query {
 
 type Product {
     product_id: ID!
-    name: String!
+    product_name: String!
     price: Int!
     short_desc: String!
     long_desc: String!
-    picture: String!
+    file: Any!
+    imgUrl: String
     category_id: ID!
 }
 
+
 type Mutation {
-    addProduct( name: String! 
-                price: String! 
-                short_desc: String! 
-                long_desc: String! 
-                picture: Upload!
-                category_id: ID!): Response!
+    addProduct(product_name: String! price: Int! short_desc: String! long_desc: String! file: Upload! category_id: Int!): Response!
 
     updateProduct( product_id: Int! 
-                name: String
+                product_name: String
                 price: Int
                 short_desc: String
                 long_desc: String
@@ -48,4 +47,11 @@ type Response {
     status: Int!
     message: String!
     product: Product
+}
+
+
+type File {
+    filename: String
+    mimetype: String
+    encoding: String
 }

@@ -19,6 +19,7 @@ type Category {
 type Mutation {
     addCategories( category_name: String! ): Response!
     updateCategories( category_id: Int! category_name: String! ): Response!
+    deleteCategories( category_id: Int! ): Response!
 }
 
 type Response {

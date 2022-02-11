@@ -15,9 +15,14 @@ const USERS = `
     offset $3 limit $4
 `
 
+const LOGIN = `
+    SELECT * FROM Users
+    WHERE username = $1 AND password = $2
+`
+
 const ADD_USER = `
     INSERT INTO Users ( username, password, contact, email, role ) VALUES 
-    ($1, crypt($2, gen_salt('bf')), $3, $4, $5)
+    ($1, $2, $3, $4, $5)
     RETURNING *
 `
 
@@ -46,6 +51,10 @@ function users ({ user_id, search, pagination: {page, limit} }) {
     return fetch(USERS, user_id, search, (page - 1) * limit, limit)
 }
 
+function login ({ username, password}) {
+    return fetch(LOGIN, username, password)
+}
+
 function addUser ({ username, password, contact, email, role }) {
     return fetch(ADD_USER, username, password, contact, email, role)
 }
@@ -56,6 +65,7 @@ function updateUser ({ user_id, username, password, contact, email, role }) {
 
 export default {
     users,
+    login, 
     addUser,
     updateUser
 }

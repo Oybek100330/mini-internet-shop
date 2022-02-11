@@ -7,7 +7,7 @@ type Query {
     orders(
         order_id: ID
         user_id: ID
-        isPaid: Boolean
+        isPaid: String
         order_created_at: String
         pagination: Pagination = {}
     ): [Order!]!
@@ -16,12 +16,12 @@ type Query {
 type Order {
     order_id: ID!
     user_id: ID!
-    isPaid: Boolean
+    isPaid: String
 }
 
 type Mutation {
-    addOrder(user_id: ID! isPaid: Boolean!): Response!
-    updateOrder(order_id: Int! isPaid: Boolean user_id: Int ): Response!
+    addOrder(user_id: ID! isPaid: String!): Response!
+    updateOrder(order_id: Int! isPaid: String user_id: Int ): Response!
     deleteOrder(order_id: Int! ): Response!
 }
 

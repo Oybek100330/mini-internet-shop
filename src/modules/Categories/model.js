@@ -29,6 +29,11 @@ const UPDATE_CATEGORIES = `
     RETURNING *
 `
 
+const DELETE_CATEGORIES = `
+    DELETE FROM Categories WHERE category_id = $1 
+    RETURNING * 
+`
+
 function categories ({ category_id, search, pagination: {page, limit} }) {
     return fetch(CATEGORIES, category_id, search, (page - 1) * limit, limit)
 }
@@ -41,8 +46,13 @@ function updateCategories ({ category_id, category_name }) {
     return fetch(UPDATE_CATEGORIES, category_id, category_name)
 }
 
+function deleteCategories ({ category_id }) {
+    return fetch(DELETE_CATEGORIES, category_id )
+}
+
 export default {
     categories,
     addCategories,
-    updateCategories
+    updateCategories,
+    deleteCategories
 }

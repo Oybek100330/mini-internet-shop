@@ -12,7 +12,7 @@ const ORDERS = `
         ELSE TRUE
     END AND
     CASE
-        WHEN $3 in (true, false) THEN isPaid = $3 
+        WHEN LENGTH($3) > 0 THEN isPaid = $3 
         ELSE TRUE
     END
     offset $4 limit $5
@@ -27,7 +27,7 @@ const ADD_ORDER = `
 const UPDATE_ORDER = `
     UPDATE orders o SET
         isPaid = (
-            CASE WHEN $2 in (true, false) THEN $2 ELSE o.isPaid END
+            CASE WHEN LENGTH($2) > 0 THEN $2 ELSE o.isPaid END
         ),
         user_id = (
             CASE WHEN $3 > 0 THEN $3 ELSE o.user_id END

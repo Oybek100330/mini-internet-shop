@@ -8,14 +8,33 @@ export default {
     },
 
     Mutation: {
-        addUser: async (_, args) => {
+        register: async (_, args) => {
             try {
                 const [ user ] = await model.addUser(args)
                 return {
 					status: 200,
-					message: "The user has been succesfully added",
+					message: "The new user has been succesfully registered",
 					user: user
 				}
+            } catch(error) {
+				return {
+					status: 400,
+					message: error.message,
+					data: null
+				}
+			}
+        },
+
+        login: async (_, args) => {
+            try {
+                const [ user ] = await model.login(args)
+                if(user){
+                    return {
+                        status: 200,
+                        message: "The new user has been succesfully logged in",
+                        user: user
+                    }
+                } else throw new Error("Wrong username or password!")
             } catch(error) {
 				return {
 					status: 400,

@@ -21,11 +21,11 @@ create table Users (
 drop table if exists Products cascade;
 create table Products (
     product_id int generated always as identity primary key,
-    name character varying(60) not null,
+    product_name character varying(60) not null,
     price bigint not null,
     short_desc character varying(80) not null,
     long_desc character varying(400) not null,
-    picture character varying(50) not null,
+    file bytea not null,
     category_id int not null references Categories(category_id)
 );
 
@@ -33,7 +33,7 @@ drop table if exists Orders cascade;
 create table Orders (
     order_id int generated always as identity primary key,
     user_id int not null references Users(user_id),
-    isPaid boolean default false,
+    isPaid character varying(20) check(isPaid in ('true', 'false')),
     order_created_at timestamptz default current_timestamp
 );
 
@@ -48,13 +48,13 @@ insert into Categories (category_name) values
 ('Noutbuklar'), ('Televizorlar'), ('Maishiy texnika'), ('Smartfonlar');
 
 insert into Users (username, password, contact, email, role) values
-('Admin', crypt('admin', gen_salt('bf')), '998943433928', 'mock@mail.ru', 'admin'),
-('Oybek', crypt('11111', gen_salt('bf')), '998595478788', 'taz@mail.com', 'user'),
-('Jasur', crypt('22222', gen_salt('bf')), '998995648928', 'baz@mail.usa', 'user'),
-('Akmal', crypt('33333', gen_salt('bf')), '998979564956', 'foo@mail.net', 'user'),
-('Zafar', crypt('44444', gen_salt('bf')), '998909054800', 'bar@mail.org', 'user');
+('Admin', 'admin', '998943433928', 'mock@mail.ru', 'admin'),
+('Oybek', '11111', '998595478788', 'taz@mail.com', 'user'),
+('Jasur', '22222', '998995648928', 'baz@mail.usa', 'user'),
+('Akmal', '33333', '998979564956', 'foo@mail.net', 'user'),
+('Zafar', '44444', '998909054800', 'bar@mail.org', 'user');
 
-insert into Products (name, price, short_desc, long_desc, picture, category_id) values
+insert into Products (product_name, price, short_desc, long_desc, file, category_id) values
 ('Artel', 1800000, 'Android-телевизор Artel 55AU20K', 'Android-телевизор Artel 55AU20K воспроизводит потрясающие, яркие и насыщенные изображения в формате HD и разрешении 3840x2160 пикселей. Теперь вы можете смотреть любимые телешоу и фильмы. Разработчики предусмотрели устойчивую подставку, и в небольшом помещении эту модель очень удобно закрепить на стене.', 'images/arteltv.jpeg', 2),
 ('Redmi 10', 3800000, 'Redmi 10 64 GB', 'Android-телевизор Artel 55AU20K воспроизводит потрясающие, яркие и насыщенные изображения в формате HD и разрешении 3840x2160 пикселей. Теперь вы можете смотреть любимые телешоу и фильмы. Разработчики предусмотрели устойчивую подставку, и в небольшом помещении эту модель очень удобно закрепить на стене.', 'images/arteltv.jpeg', 4),
 ('Lenovo Yoga', 1800000, 'Lenovo Yoga ultra edition', 'Android-телевизор Artel 55AU20K воспроизводит потрясающие, яркие и насыщенные изображения в формате HD и разрешении 3840x2160 пикселей. Теперь вы можете смотреть любимые телешоу и фильмы. Разработчики предусмотрели устойчивую подставку, и в небольшом помещении эту модель очень удобно закрепить на стене.', 'images/arteltv.jpeg', 1),
@@ -67,10 +67,10 @@ insert into Products (name, price, short_desc, long_desc, picture, category_id) 
 ('Konditsioner', 2600000, 'Konditsioner Artel 55AU20K', 'Android-телевизор Artel 55AU20K воспроизводит потрясающие, яркие и насыщенные изображения в формате HD и разрешении 3840x2160 пикселей. Теперь вы можете смотреть любимые телешоу и фильмы. Разработчики предусмотрели устойчивую подставку, и в небольшом помещении эту модель очень удобно закрепить на стене.', 'images/arteltv.jpeg', 3);
 
 insert into Orders (user_id, isPaid) values
-(2, false),
-(5, false),
-(4, false),
-(3, false);
+(2, 'true'),
+(5, 'true'),
+(4, 'true'),
+(3, 'true');
 
 insert into Order_products (order_id, product_id, count) values
 (1, 2, 2), (1, 8, 1), (1, 5, 3), (1, 1, 1), (1, 4, 1), (1, 7, 2), 

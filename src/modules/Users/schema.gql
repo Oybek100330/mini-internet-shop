@@ -20,11 +20,14 @@ type User {
 }
 
 type Mutation {
-    addUser(username: String! 
+    register(username: String! 
             password: String! 
             contact: String! 
             email: String! 
             role: String! ): Response!
+
+    login(username: String! 
+          password: String! ): Response!
 
     updateUser(user_id: Int! 
                username: String

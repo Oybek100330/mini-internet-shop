@@ -9,7 +9,7 @@ const PRODUCTS = `
     END AND
     CASE
         WHEN LENGTH($2) > 0 THEN (
-        name ILIKE CONCAT('%', $2, '%')
+        product_name ILIKE CONCAT('%', $2, '%')
         ) ELSE TRUE
     END AND
     CASE
@@ -24,15 +24,15 @@ const PRODUCTS = `
 `
 
 const ADD_PRODUCT = `
-    INSERT INTO Products ( name, price, short_desc, long_desc, picture, category_id ) VALUES 
+    INSERT INTO Products ( product_name, price, short_desc, long_desc, file, category_id ) VALUES 
     ($1, $2, $3, $4, $5, $6)
     RETURNING *
 `
 
 const UPDATE_PRODUCT = `
     UPDATE Products p SET
-        name = (
-            CASE WHEN LENGTH($2) > 0 THEN $2 ELSE p.name END
+        product_name = (
+            CASE WHEN LENGTH($2) > 0 THEN $2 ELSE p.product_name END
         ),
         price = (
             CASE WHEN $3 > 0 THEN $3 ELSE p.price END
@@ -59,16 +59,16 @@ function products ({ product_id, search, price, category_id, pagination: {page, 
     return fetch(PRODUCTS, product_id, search, price, category_id, (page - 1) * limit, limit)
 }
 
-function addProduct ({ name, price, short_desc, long_desc, picture, category_id }) {
-    return fetch(ADD_PRODUCT, name, price, short_desc, long_desc, picture, category_id)
+function addProduct ({ product_name, price, short_desc, long_desc, file, category_id }) {
+    return fetch(ADD_PRODUCT, product_name, price, short_desc, long_desc, file, category_id)
 }
 
-function updateProduct ({ name, price, short_desc, long_desc, category_id }) {
-    return fetch(UPDATE_PRODUCT, name, price, short_desc, long_desc, category_id )
+function updateProduct ({ product_name, price, short_desc, long_desc, category_id }) {
+    return fetch(UPDATE_PRODUCT, product_name, price, short_desc, long_desc, category_id )
 }
 
 function deleteProduct ({ product_id }) {
-    return fetch(DELETE_ORDER, product_id)
+    return fetch(DELETE_PRODUCT, product_id)
 }
 
 export default {
