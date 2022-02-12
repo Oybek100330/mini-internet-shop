@@ -16,22 +16,20 @@ export default {
     },
 
     Mutation: {
-        addProduct: async (_, { product_name, price, short_desc, long_desc, file, category_id }) => {
+        addProduct: async (_, { product_name, price, short_desc, long_desc, file, category_id }, context) => {
             try {
-                const { token } = req.headers
-
+                const token = context.token
 		        if(!token) {
 		        	throw new Error("user is not authorized!")
 		        }
             
-		        const { userId, agent } = tokenFunction.verify(token)
+		        const { userId, userAgent } = tokenFunction.verify(token)
             
-		        if(!(req.headers['user-agent'] == agent)) {
+		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
 
-                if(userId != 1) throw new Error("Sorry you are not admin!!!")
-
+                if(userId != "1") throw new Error("Sorry you are not admin!!!")
                 const { createReadStream, filename, mimetype, encoding } = await file
                 if(['image/jpeg', 'image/jpg', 'image/png'].indexOf(mimetype) == -1 ) {
                     throw new Error("Filetype must be 'jpeg', 'jpg' or 'png'")
@@ -62,21 +60,20 @@ export default {
 			}
         },
         
-        updateProduct: async (_, args) => {
+        updateProduct: async (_, args, context) => {
             try {
-                const { token } = req.headers
-
+                const token = context.token
 		        if(!token) {
 		        	throw new Error("user is not authorized!")
 		        }
             
-		        const { userId, agent } = tokenFunction.verify(token)
+		        const { userId, userAgent } = tokenFunction.verify(token)
             
-		        if(!(req.headers['user-agent'] == agent)) {
+		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
 
-                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+                if(userId != "1") throw new Error("Sorry you are not admin!!!")
 
                 const [ product ] = await model.updateProduct(args)
                 if(product){
@@ -95,21 +92,20 @@ export default {
 			}
         },
 
-        deleteProduct: async (_, args) => {
+        deleteProduct: async (_, args, context) => {
             try {
-                const { token } = req.headers
-
+                const token = context.token
 		        if(!token) {
 		        	throw new Error("user is not authorized!")
 		        }
             
-		        const { userId, agent } = tokenFunction.verify(token)
+		        const { userId, userAgent } = tokenFunction.verify(token)
             
-		        if(!(req.headers['user-agent'] == agent)) {
+		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
 
-                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+                if(userId != "1") throw new Error("Sorry you are not admin!!!")
 
                 const [ product ] = await model.deleteProduct(args)
                 if(product){

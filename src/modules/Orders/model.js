@@ -3,18 +3,14 @@ import fetch from '../../utils/postgres.js'
 const ORDERS = `
     SELECT * FROM Orders
     WHERE
-    CASE
+    (CASE
         WHEN $1 > 0 THEN order_id = $1
-        ELSE TRUE
-    END AND
-    CASE
-        WHEN $2 > 0 THEN user_id = $2
         ELSE TRUE
     END AND
     CASE
         WHEN LENGTH($3) > 0 THEN isPaid = $3 
         ELSE TRUE
-    END
+    END) AND user_id = $2
     offset $4 limit $5
 `
 
@@ -37,7 +33,7 @@ const UPDATE_ORDER = `
 `
 
 const DELETE_ORDER = `
-    DELETE FROM Orders WHERE order_id = $1 
+    DELETE FROM Orders WHERE order_id = $1 AND user_id = $2
     RETURNING * 
 `
 
@@ -53,8 +49,8 @@ function updateOrder ({ order_id, isPaid, user_id }) {
     return fetch(UPDATE_ORDER, order_id, isPaid, user_id)
 }
 
-function deleteOrder ({ order_id }) {
-    return fetch(DELETE_ORDER, order_id)
+function deleteOrder ({ order_id, user_id }) {
+    return fetch(DELETE_ORDER, order_id, user_id)
 }
 
 export default {

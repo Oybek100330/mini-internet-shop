@@ -7,8 +7,9 @@ import {
   import express from 'express'
   import http from 'http'
   import path from 'path'
-  import context from './context.js'
+  // import context from './context.js'
   import '../config.js'
+
   
   import module from './modules/index.js'
 import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload'
@@ -26,7 +27,11 @@ import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload'
   
       const server = new ApolloServer({
           introspection: true,
-          context,
+          context: ({req, res}) => {
+            return {token: req.headers.token,
+                    userAgent: req.headers['user-agent']
+            }
+          }, 
           schema: schema,
           plugins: [
               ApolloServerPluginLandingPageGraphQLPlayground(),

@@ -39,6 +39,7 @@ type Mutation {
 
 type Response {
     status: Int!
+    message: String!
     token: String!
     user: User
 }

@@ -9,21 +9,21 @@ export default {
     },
 
     Mutation: {
-        addCategories: async (_, args) => {
+        addCategories: async (_, args, context) => {
             try {
-                const { token } = req.headers
-
+                // console.log(context);
+                const token = context.token
 		        if(!token) {
 		        	throw new Error("user is not authorized!")
 		        }
             
-		        const { userId, agent } = tokenFunction.verify(token)
+		        const { userId, userAgent } = tokenFunction.verify(token)
             
-		        if(!(req.headers['user-agent'] == agent)) {
+		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
 
-                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+                if(userId != "1") throw new Error("Sorry you are not admin!!!")
                 const [ category ] = await model.addCategories(args)
                 return {
 					status: 200,
@@ -39,21 +39,20 @@ export default {
 			}
         },
         
-        updateCategories: async (_, args) => {
+        updateCategories: async (_, args, context) => {
             try {
-                const { token } = req.headers
-
+                const token = context.token
 		        if(!token) {
 		        	throw new Error("user is not authorized!")
 		        }
             
-		        const { userId, agent } = tokenFunction.verify(token)
+		        const { userId, userAgent } = tokenFunction.verify(token)
             
-		        if(!(req.headers['user-agent'] == agent)) {
+		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
 
-                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+                if(userId != "1") throw new Error("Sorry you are not admin!!!")
 
                 const [ category ] = await model.updateCategories(args)
                 if(category){
@@ -72,21 +71,20 @@ export default {
 			}
         },
 
-        deleteCategories: async (_, args) => {
+        deleteCategories: async (_, args, context) => {
             try {
-                const { token } = req.headers
-
+                const token = context.token
 		        if(!token) {
 		        	throw new Error("user is not authorized!")
 		        }
             
-		        const { userId, agent } = tokenFunction.verify(token)
+		        const { userId, userAgent } = tokenFunction.verify(token)
             
-		        if(!(req.headers['user-agent'] == agent)) {
+		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
 
-                if(userId != 1) throw new Error("Sorry you are not admin!!!")
+                if(userId != "1") throw new Error("Sorry you are not admin!!!")
 
                 const [ category ] = await model.deleteCategories(args)
                 if(category){

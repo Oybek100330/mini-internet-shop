@@ -3,15 +3,38 @@ import tokenFunction from '../../utils/jwt.js'
 
 export default {
     Query: {
-        orders: async (_, args) => {
-            return await model.orders(args)
+        orders: async (_, { order_id, user_id, isPaid, pagination: {page, limit}}, context) => {
+            const token = context.token
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, userAgent } = tokenFunction.verify(token)
+                
+                if(!userId) throw new Error("Sorry you are not authorized!!!")
+		        if(context.userAgent != userAgent) {
+		        	throw new Error("token is invalid!")
+		        }
+            return await model.orders({ order_id, user_id: userId, isPaid, pagination: {page, limit}})
         }
     },
 
     Mutation: {
-        addOrder: async (_, args) => {
+        addOrder: async (_, {user_id, isPaid}, context) => {
             try {
-                const [ order ] = await model.addOrder(args)
+                const token = context.token
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, userAgent } = tokenFunction.verify(token)
+                
+                if(!userId) throw new Error("Sorry you are not authorized!!!")
+		        if(context.userAgent != userAgent) {
+		        	throw new Error("token is invalid!")
+		        }
+
+                const [ order ] = await model.addOrder({user_id: userId, isPaid: "f"})
                 return {
 					status: 200,
 					message: "The order has been succesfully added",
@@ -26,9 +49,20 @@ export default {
 			}
         },
         
-        updateOrder: async (_, args) => {
+        updateOrder: async (_, { order_id, isPaid, user_id }, context) => {
             try {
-                const [ order ] = await model.updateOrder(args)
+                const token = context.token
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, userAgent } = tokenFunction.verify(token)
+                
+                if(!userId) throw new Error("Sorry you are not authorized!!!")
+		        if(context.userAgent != userAgent) {
+		        	throw new Error("token is invalid!")
+		        }
+                const [ order ] = await model.updateOrder({ order_id, isPaid, user_id: userId })
                 if(order){
                     return {
                         status: 200,
@@ -45,9 +79,20 @@ export default {
 			}
         }, 
 
-        deleteOrder: async (_, args) => {
+        deleteOrder: async (_, { order_id, user_id }, context) => {
             try {
-                const [ order ] = await model.deleteOrder(args)
+                const token = context.token
+		        if(!token) {
+		        	throw new Error("user is not authorized!")
+		        }
+            
+		        const { userId, userAgent } = tokenFunction.verify(token)
+                
+                if(!userId) throw new Error("Sorry you are not authorized!!!")
+		        if(context.userAgent != userAgent) {
+		        	throw new Error("token is invalid!")
+		        }
+                const [ order ] = await model.deleteOrder({ order_id, user_id: userId })
                 if(order){
                     return {
                         status: 200,

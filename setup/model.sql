@@ -33,7 +33,7 @@ drop table if exists Orders cascade;
 create table Orders (
     order_id int generated always as identity primary key,
     user_id int not null references Users(user_id),
-    isPaid character varying(20) check(isPaid in ('true', 'false')),
+    isPaid character varying(20) check(isPaid in ('t', 'f')),
     order_created_at timestamptz default current_timestamp
 );
 
@@ -67,10 +67,10 @@ insert into Products (product_name, price, short_desc, long_desc, file, category
 ('Konditsioner', 2600000, 'Konditsioner Artel 55AU20K', 'Android-телевизор Artel 55AU20K воспроизводит потрясающие, яркие и насыщенные изображения в формате HD и разрешении 3840x2160 пикселей. Теперь вы можете смотреть любимые телешоу и фильмы. Разработчики предусмотрели устойчивую подставку, и в небольшом помещении эту модель очень удобно закрепить на стене.', 'images/arteltv.jpeg', 3);
 
 insert into Orders (user_id, isPaid) values
-(2, 'true'),
-(5, 'true'),
-(4, 'true'),
-(3, 'true');
+(2, 'f'),
+(5, 'f'),
+(4, 'f'),
+(3, 'f');
 
 insert into Order_products (order_id, product_id, count) values
 (1, 2, 2), (1, 8, 1), (1, 5, 3), (1, 1, 1), (1, 4, 1), (1, 7, 2), 

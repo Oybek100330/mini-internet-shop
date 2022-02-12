@@ -9,13 +9,13 @@ export default {
     },
 
     Mutation: {
-        register: async (_, args) => {
+        register: async (_, args, context) => {
             try {
                 const [ user ] = await model.addUser(args)
                 return {
 					status: 200,
-					// message: "The new user has been succesfully registered",
-                    token: tokenFunction.sign({ userId: user.user_id}),
+					message: "The new user has been succesfully registered",
+                    token: tokenFunction.sign({ userId: user.user_id, userAgent: context.userAgent}),
 					user: user
 				}
             } catch(error) {
@@ -27,14 +27,14 @@ export default {
 			}
         },
 
-        login: async (_, args) => {
+        login: async (_, args, context) => {
             try {
                 const [ user ] = await model.login(args)
                 if(user){
                     return {
                         status: 200,
                         message: "The new user has been succesfully logged in",
-                        token: tokenFunction.sign({ userId: user.user_id }),
+                        token: tokenFunction.sign({ userId: user.user_id, userAgent: context.userAgent }),
                         user: user
                     }
                 } else throw new Error("Wrong username or password!")
