@@ -25,7 +25,7 @@ type Order {
 }
 
 type Mutation {
-    addOrder(user_id: ID! isPaid: String!): Response!
+    addOrder(user_id: ID isPaid: String): Response!
     updateOrder(order_id: Int! isPaid: String user_id: Int ): Response!
     deleteOrder(order_id: Int! ): Response!
 }
