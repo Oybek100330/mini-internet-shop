@@ -15,6 +15,8 @@ export default {
 		        if(context.userAgent != userAgent) {
 		        	throw new Error("token is invalid!")
 		        }
+            const result = await model.orders({ order_id, user_id: userId, isPaid, pagination: {page, limit}})
+            console.log(result)
             return await model.orders({ order_id, user_id: userId, isPaid, pagination: {page, limit}})
         }
     },

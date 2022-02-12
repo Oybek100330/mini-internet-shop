@@ -1,16 +1,29 @@
 import fetch from '../../utils/postgres.js'
 
 const ORDERS = `
-    SELECT * FROM Orders
+    select 
+        o.*,
+        json_agg(op.count) as count,
+        json_agg(p.price) as price,
+        json_agg(p.product_name) as products,
+        sum(op.count * p.price) as summary
+    from orders as o
+    left join order_products as op on op.order_id = o.order_id
+    inner join products as p on p.product_id = op.product_id
     WHERE
-    (CASE
-        WHEN $1 > 0 THEN order_id = $1
+        (CASE
+        WHEN $1 > 0 THEN o.order_id = $1
         ELSE TRUE
-    END AND
-    CASE
-        WHEN LENGTH($3) > 0 THEN isPaid = $3 
+        END AND
+        CASE
+        WHEN LENGTH($3) > 0 THEN o.isPaid = $3 
         ELSE TRUE
-    END) AND user_id = $2
+        END AND 
+        CASE
+        WHEN $2 > 0 THEN o.user_id = $2
+        ELSE TRUE
+        END)
+    group by o.order_id
     offset $4 limit $5
 `
 

@@ -17,6 +17,11 @@ type Order {
     order_id: ID!
     user_id: ID!
     isPaid: String
+    order_created_at: Any
+    count: [Int]
+    price: [Int]
+    products: [String]
+    summary: Int
 }
 
 type Mutation {

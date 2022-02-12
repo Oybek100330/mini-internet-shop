@@ -79,7 +79,28 @@ insert into Order_products (order_id, product_id, count) values
 (4, 1, 1), (4, 4, 1), (4, 2, 2);
 
 
+select o.*,
+json_agg(op.count) as count,
+json_agg(p.price) as price,
+json_agg(p.product_name),
+sum(op.count * p.price) as summary
+from orders as o
+left join order_products as op on op.order_id = o.order_id
+inner join products as p on p.product_id = op.product_id
+group by o.order_id;
 
+select 
+    o.*,
+    json_agg(op.count) as count,
+    json_agg(p.price) as price,
+    json_agg(p.product_name) as products,
+    sum(op.count * p.price) as summary
+from orders as o
+left join order_products as op on op.order_id = o.order_id
+inner join products as p on p.product_id = op.product_id
+WHERE user_id = 2
+group by o.order_id
+offset 1 limit 5
 
 
 data model
